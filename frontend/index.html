@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Eligo — Are you the one they'll choose?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <div class="brand">
+        <span class="brand__mark">E</span>
+        <span class="brand__name">Eligo</span>
+      </div>
+      <p class="brand__tag">eligere, v. <em>to choose</em> — find out if you're the one</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="hero">
+      <h1>Before a recruiter reads your resume,<br class="hero__br" /> a machine chooses whether they get to.</h1>
+      <p class="hero__sub">Upload your resume and the job description. Eligo scores your ATS match, tells you if you clear the bar, and hands you specific fixes — powered by Google Gemini.</p>
+    </section>
+
+    <section class="panel" id="form-panel">
+      <form id="analyze-form">
+        <div class="field-grid">
+
+          <div class="field">
+            <label for="resume-input" class="field__label">
+              <span class="field__num">01</span> Résumé
+            </label>
+            <div class="dropzone" id="dropzone">
+              <input type="file" id="resume-input" name="resume" accept=".pdf,.docx,.txt" hidden />
+              <div class="dropzone__idle">
+                <p class="dropzone__title">Drop your resume, or <span class="link">browse</span></p>
+                <p class="dropzone__hint">PDF, DOCX or TXT · up to 8MB</p>
+              </div>
+              <div class="dropzone__file" hidden>
+                <p class="dropzone__filename"></p>
+                <button type="button" class="dropzone__clear" id="clear-file">remove</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="jd-input" class="field__label">
+              <span class="field__num">02</span> Job description
+            </label>
+            <textarea id="jd-input" name="jobDescription" placeholder="Paste the full job posting here — responsibilities, requirements, everything. The more complete it is, the sharper the read." rows="10"></textarea>
+          </div>
+
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" id="submit-btn" class="btn-primary">
+            <span class="btn-primary__label">Judge my odds</span>
+          </button>
+          <p class="submit-hint" id="form-error"></p>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel panel--loading" id="loading-panel" hidden>
+      <div class="seal seal--spinning">
+        <div class="seal__ring"></div>
+        <div class="seal__core">E</div>
+      </div>
+      <p id="loading-text">Reading your resume…</p>
+    </section>
+
+    <section class="results" id="results" hidden>
+
+      <div class="verdict">
+        <div class="verdict__seal">
+          <svg viewBox="0 0 200 200" class="gauge" id="gauge">
+            <circle cx="100" cy="100" r="86" class="gauge__track" />
+            <circle cx="100" cy="100" r="86" class="gauge__fill" id="gauge-fill" />
+          </svg>
+          <div class="verdict__score">
+            <span id="score-number">0</span>
+            <span class="verdict__of">/100</span>
+          </div>
+        </div>
+        <div class="verdict__text">
+          <p class="verdict__eyebrow">ATS score</p>
+          <h2 id="verdict-status">—</h2>
+          <p id="verdict-summary" class="verdict__summary"></p>
+        </div>
+      </div>
+
+      <div class="scorebars" id="scorebars"></div>
+
+      <div class="cols">
+        <div class="col">
+          <h3 class="col__title">Matched keywords</h3>
+          <div class="chips chips--good" id="matched-chips"></div>
+        </div>
+        <div class="col">
+          <h3 class="col__title">Missing keywords</h3>
+          <div class="chips chips--gap" id="missing-chips"></div>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <h3 class="col__title">Where you're strong</h3>
+          <ul class="list" id="strengths-list"></ul>
+        </div>
+        <div class="col">
+          <h3 class="col__title">What to fix</h3>
+          <ul class="suggestions" id="suggestions-list"></ul>
+        </div>
+      </div>
+
+      <button type="button" class="btn-secondary" id="reset-btn">Score another match</button>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">Eligo doesn't decide who gets hired. It decides who reads further.</div>
+  </footer>
+
+<script src="script.js"></script>
+</body>
+</html>
