@@ -1,0 +1,56 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+
+# Prevent overlapping deployments — cancel in-progress if a new push comes in
+concurrency:
+  group: eligo-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            echo "→ Navigating to project"
+            cd ~/eligo
+
+            echo "→ Stashing any local changes"
+            git stash push --include-untracked || true
+
+            echo "→ Pulling latest code"
+            git pull origin main
+
+            echo "→ Installing backend dependencies"
+            cd backend
+            npm ci --only=production
+
+            echo "→ Restarting Eligo service"
+            sudo systemctl restart eligo
+
+            echo "→ Checking service health"
+            sleep 3
+            if sudo systemctl is-active eligo --quiet; then
+              echo "✓ Eligo service is running"
+            else
+              echo "✗ Eligo service failed to start"
+              sudo systemctl status eligo --no-pager
+              exit 1
+            fi
+
+            echo "✓ Deployment complete"
