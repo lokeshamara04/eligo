@@ -15,11 +15,6 @@ const loadingText = document.getElementById("loading-text");
 const resultsSection = document.getElementById("results");
 const resetBtn = document.getElementById("reset-btn");
 
-const ALLOWED_MIME_TYPES = new Set([
-  "application/pdf",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "text/plain",
-]);
 const MAX_FILE_SIZE_BYTES = 8 * 1024 * 1024;
 const GAUGE_CIRCUMFERENCE = 2 * Math.PI * 86;
 
@@ -91,7 +86,7 @@ function handleFileSelection(file) {
 
 function validateFile(file) {
   const extension = (file.name || "").toLowerCase();
-  const isAllowedExtension = /\.pdf$/i.test(extension) || /\.docx$/i.test(extension) || /\.txt$/i.test(extension);
+  const isAllowedExtension = /\.(pdf|docx|txt)$/i.test(extension);
 
   if (!isAllowedExtension) {
     return "Please upload a PDF, DOCX, or TXT resume.";
@@ -99,10 +94,6 @@ function validateFile(file) {
 
   if (file.size > MAX_FILE_SIZE_BYTES) {
     return "That file is too large. Please choose a file under 8MB.";
-  }
-
-  if (!ALLOWED_MIME_TYPES.has(file.type) && !/\.(pdf|docx|txt)$/i.test(extension)) {
-    return "Please upload a PDF, DOCX, or TXT resume.";
   }
 
   return "";
