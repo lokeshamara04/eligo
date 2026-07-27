@@ -40,6 +40,9 @@ jobs:
             cd backend
             npm ci --only=production
 
+            echo "→ Force-freeing port 3000 if anything is holding it"
+            sudo fuser -k 3000/tcp 2>/dev/null || true
+
             echo "→ Restarting Eligo service"
             sudo systemctl restart eligo
 
