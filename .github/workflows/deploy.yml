@@ -56,6 +56,9 @@ jobs:
               exit 1
             fi
 
+            echo "→ Reloading nginx reverse proxy"
+            sudo systemctl reload nginx || sudo systemctl restart nginx
+
             echo "→ Checking HTTP health endpoint"
             for i in 1 2 3 4 5; do
               HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/api/health 2>/dev/null || echo "000")
